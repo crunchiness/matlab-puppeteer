@@ -43,7 +43,7 @@ classdef ev3control
             fclose(self.client);
         end
         
-        function motor_forward(self, which)
+        function what = motor_forward(self, which)
             json_str = savejson('command', struct('cmd', 'forward', 'dev', 'motor', 'port', which), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
@@ -57,8 +57,53 @@ classdef ev3control
             fclose(self.client);
         end
         
+        function speed = motor_getspeed(self, which)
+            json_str = savejson('command', struct('cmd', 'getspeed', 'dev', 'motor', 'port', which), 'Compact', 1);
+            fopen(self.client);
+            fwrite(self.client, json_str);
+            speed = sprintf('%s', fread(self.client, 100));
+            fclose(self.client);
+        end
+        
         function motor_stop(self, which)
             json_str = savejson('command', struct('cmd', 'stop', 'dev', 'motor', 'port', which), 'Compact', 1);
+            fopen(self.client);
+            fwrite(self.client, json_str);
+            fclose(self.client);
+        end
+        
+        function sensor_init(self, which, sensor_type)
+            json_str = savejson('command', struct('cmd', 'init', 'dev', 'sensor', 'port', which, 'type', sensor_type), 'Compact', 1);
+            fopen(self.client);
+            fwrite(self.client, json_str);
+            fclose(self.client);
+        end
+        
+        function sensor_setmode(self, which, mode)
+            json_str = savejson('command', struct('cmd', 'setmode', 'dev', 'sensor', 'port', which, 'mode', mode), 'Compact', 1);
+            fopen(self.client);
+            fwrite(self.client, json_str);
+            fclose(self.client);
+        end
+        
+        function mode = sensor_getmode(self, which)
+            json_str = savejson('command', struct('cmd', 'getmode', 'dev', 'sensor', 'port', which), 'Compact', 1);
+            fopen(self.client);
+            fwrite(self.client, json_str);
+            mode = sprintf('%s', fread(self.client, 100));
+            fclose(self.client);
+        end
+        
+        function value = sensor_getvalue(self, which)
+            json_str = savejson('command', struct('cmd', 'getvalue', 'dev', 'sensor', 'port', which), 'Compact', 1);
+            fopen(self.client);
+            fwrite(self.client, json_str);
+            value = sprintf('%s', fread(self.client, 100));
+            fclose(self.client);
+        end
+        
+        function sensor_close(self, which)
+            json_str = savejson('command', struct('cmd', 'close', 'dev', 'sensor', 'port', which), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
             fclose(self.client);
