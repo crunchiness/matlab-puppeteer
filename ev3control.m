@@ -6,15 +6,20 @@ classdef ev3control
         port;
         ev3ip;
         client;
+        WIDTH = 160;
+        HEIGHT = 120;
+        VALUES = 3;
+        HEADER = 54;
     end
     
     methods
         function self = ev3control(port, ev3ip)
             self.port = port;
             self.ev3ip = ev3ip;
-            self.client = tcpip(self.ev3ip, self.port, 'NetworkRole', 'client');
+            self.client = tcpip(self.ev3ip, self.port, 'NetworkRole', 'client','InputBufferSize',100000);
         end
         
+        % General/brick
         function beep(self)
             json_str = savejson('command', struct('cmd', 'beep', 'dev', 'brick'), 'Compact', 1);
             fopen(self.client);
@@ -36,6 +41,7 @@ classdef ev3control
             fclose(self.client);
         end
         
+        % Motors
         function motor_init(self, where)
             json_str = savejson('command', struct('cmd', 'init', 'dev', 'motor', 'port', where), 'Compact', 1);
             fopen(self.client);
@@ -72,6 +78,7 @@ classdef ev3control
             fclose(self.client);
         end
         
+        % Sensors
         function sensor_init(self, which, sensor_type)
             json_str = savejson('command', struct('cmd', 'init', 'dev', 'sensor', 'port', which, 'type', sensor_type), 'Compact', 1);
             fopen(self.client);
@@ -109,12 +116,49 @@ classdef ev3control
             fclose(self.client);
         end
         
-        function malformed(self)
+        % Camera
+        function camera_init(self, varargin)
+            if nargin == 3
+                self.WIDTH = varargin{1};
+                self.HEIGHT = varargin{2};
+            end
+            json_str = savejson('command', struct('cmd', 'init', 'dev', 'camera', 'width', self.WIDTH, 'height', self.HEIGHT), 'Compact', 1);
             fopen(self.client);
-            fwrite(self.client, 'shit')
+            fwrite(self.client, json_str);
             fclose(self.client);
+        end
+        
+        function pic = camera_takepic(self, varargin)
+            ifnorm = 0;
+            if nargin == 2
+                ifnorm = strcmp(varargin{1}, 'norm');
+            end
+            
+            % Brick sends back BMP image file with header and all
+            bytes = self.HEADER + self.WIDTH * self.HEIGHT * self.VALUES;
+            json_str = savejson('command', struct('cmd', 'takepic', 'dev', 'camera'), 'Compact', 1);
+            fopen(self.client);
+            fwrite(self.client, json_str);
+            bmp_image = fread(self.client, bytes);
+            fclose(self.client);
+            
+            % Extract image into MATLAB array
+            pic = reshape(bmp_image(self.HEADER+1:end), [self.VALUES self.WIDTH self.HEIGHT]);
+            pic = permute(pic, [2 3 1]);
+            
+            % Switch BGR into RGB
+            b = pic(:,:,1);
+            pic(:,:,1) = pic(:,:,3);
+            pic(:,:,3) = b;
+            
+            % Rotate into standard position
+            pic = rot90(pic);
+            
+            % Normalize
+            if ifnorm
+                pic = pic / 255.0;
+            end
         end
     end
     
 end
-
