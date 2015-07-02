@@ -179,7 +179,7 @@ classdef ev3control
                 self.WIDTH = varargin{1};
                 self.HEIGHT = varargin{2};
             end
-            json_str = savejson('command', struct('cmd', 'init', 'dev', 'camera', 'width', self.WIDTH, 'height', self.HEIGHT), 'Compact', 1);
+            json_str = savejson('command', struct('cmd', 'init', 'dev', 'camera', 'cam_width', self.WIDTH, 'cam_height', self.HEIGHT), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
             fclose(self.client);
