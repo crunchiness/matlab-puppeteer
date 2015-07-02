@@ -153,7 +153,11 @@ classdef ev3control
             json_str = savejson('command', struct('cmd', 'getvalue', 'dev', 'sensor', 'port', which), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
-            value = sprintf('%s', fread(self.client, 100));
+            valueJSON = loadjson(sprintf('%s', fread(self.client, 100)));
+            value = valueJSON.value;
+            if iscell(value)
+                value = inf;
+            end
             fclose(self.client);
         end
         
@@ -168,7 +172,8 @@ classdef ev3control
             json_str = savejson('command', struct('cmd', 'getmode', 'dev', 'sensor', 'port', which), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
-            mode = sprintf('%s', fread(self.client, 100));
+            modeJSON = loadjson(sprintf('%s', fread(self.client, 100)));
+            mode = modeJSON.mode;
             fclose(self.client);
         end
 
