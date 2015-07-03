@@ -59,7 +59,7 @@ classdef ev3control
         % Motors %%%%%%%%
         %%%%%%%%%%%%%%%%%
         function motor_init(self, where, type)
-            % type: small, large
+            % type: medium, large
             % port: A, B, C, D
             json_str = savejson('command', struct('cmd', 'init', 'dev', 'motor', 'port', where, 'motor_type', type), 'Compact', 1);
             fopen(self.client);
@@ -114,7 +114,8 @@ classdef ev3control
             json_str = savejson('command', struct('cmd', 'getspeed', 'dev', 'motor', 'port', which), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
-            reading = sprintf('%s', fread(self.client, 100));
+            valueJSON = loadjson(sprintf('%s', fread(self.client, 100)));
+            reading = valueJSON.speed;
             fclose(self.client);
         end
         
