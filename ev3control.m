@@ -95,11 +95,12 @@ classdef ev3control
             fclose(self.client);
         end
         
-        function reading = motor_gettacho(self)
+        function reading = motor_gettacho(self, which)
             json_str = savejson('command', struct('cmd', 'gettacho', 'dev', 'motor', 'port', which), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
-            reading = sprintf('%s', fread(self.client, 100));
+            valueJSON = loadjson(sprintf('%s', fread(self.client, 100)));
+            reading = valueJSON.tacho;
             fclose(self.client);
         end
         
