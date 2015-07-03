@@ -1,4 +1,4 @@
-classdef ev3control
+classdef ev3control < handle
     %UNTITLED2 Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -19,8 +19,8 @@ classdef ev3control
         port;
         ev3ip;
         client;
-        WIDTH = 176;
-        HEIGHT = 144;
+        WIDTH;
+        HEIGHT;
         VALUES = 3;
         HEADER = 54;
     end
@@ -127,12 +127,35 @@ classdef ev3control
             fclose(self.client);
         end
         
-        
-        function motor_rotate(self, which, speed)
-            json_str = savejson('command', struct('cmd', 'setspeed', 'dev', 'motor', 'port', which, 'speed', speed), 'Compact', 1);
+        function motor_rotate(self, which, degrees, varargin)
+            defaults = struct('IsAsync', 1);
+            params = optional_args(defaults, varargin);
+            
+            json_str = savejson('command', struct('cmd', 'rotate', 'dev', 'motor', 'port', which, 'rotate_deg', degrees, 'is_async', params.('IsAsync')), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
+            if ~params.('IsAsync')
+                fread(self.client, 100);
+            end
             fclose(self.client);
+        end
+        
+        function macro_turn(self, motor_port1, motor_port2, degrees, varargin)
+            % turns the robot in place by some angle, using two wheels
+            % can be blocking or asynchronous (default)
+            defaults = struct('WheelDistance', 20.5, 'WheelRadius', 1.75, 'IsAsync', 1);
+            params = optional_args(defaults, varargin);
+            
+            angle1 = round(((degrees*params.('WheelDistance')) / (params.('WheelRadius')*2)));
+            angle2 = -angle1;
+            self.motor_rotate(motor_port1, angle1);
+            self.motor_rotate(motor_port2, angle2, 'IsAsync', params.('IsAsync'));
+        end
+        
+        function macro_forward(self)
+        end
+        
+        function macro_backward(self)
         end
 
         % Sensors %%%%%%%
@@ -181,11 +204,11 @@ classdef ev3control
 
         % Camera %%%%%%%%
         %%%%%%%%%%%%%%%%%
-        function camera_init(self, varargin)
-            if nargin == 3
-                self.WIDTH = varargin{1};
-                self.HEIGHT = varargin{2};
-            end
+        function self = camera_init(self, varargin)
+            defaults = struct('Width', 176, 'Height', 144);
+            params = optional_args(defaults, varargin);
+            self.WIDTH = params.('Width');
+            self.HEIGHT = params.('Height');
             json_str = savejson('command', struct('cmd', 'init', 'dev', 'camera', 'cam_width', self.WIDTH, 'cam_height', self.HEIGHT), 'Compact', 1);
             fopen(self.client);
             fwrite(self.client, json_str);
@@ -200,10 +223,9 @@ classdef ev3control
         end
         
         function pic = camera_takepic(self, varargin)
-            ifnorm = 0;
-            if nargin == 2
-                ifnorm = strcmp(varargin{1}, 'norm');
-            end
+            
+            defaults = struct('Normalize', 0);
+            params = optional_args(defaults, varargin);
             
             % Brick sends back BMP image file with header and all
             bytes = self.HEADER + self.WIDTH * self.HEIGHT * self.VALUES;
@@ -226,7 +248,7 @@ classdef ev3control
             pic = rot90(pic);
             
             % Normalize
-            if ifnorm
+            if params.('Normalize')
                 pic = pic / 255.0;
             end
         end

@@ -7,7 +7,7 @@ ctrl = ev3control(port, ip);
 ctrl.camera_init();
 picture = ctrl.camera_takepic();
 for m = 1:20
-    picture_norm = ctrl.camera_takepic('norm');
+    picture_norm = ctrl.camera_takepic('Normalize', 1);
     imshow(picture_norm);
     pause(0.5);
 end
