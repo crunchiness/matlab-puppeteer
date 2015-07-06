@@ -29,7 +29,7 @@ classdef ev3control < handle
         function self = ev3control(port, ev3ip)
             self.port = port;
             self.ev3ip = ev3ip;
-            self.client = tcpip(self.ev3ip, self.port, 'NetworkRole', 'client','InputBufferSize', 100000);
+            self.client = tcpip(self.ev3ip, self.port, 'NetworkRole', 'client','InputBufferSize', 100000, 'Timeout', 120);
         end
         
         
@@ -150,14 +150,39 @@ classdef ev3control < handle
             angle2 = -angle1;
             self.motor_rotate(motor_port1, angle1);
             self.motor_rotate(motor_port2, angle2, 'IsAsync', params.('IsAsync'));
+            % If not async, make sure that the asynchronous wheel is
+            % stopped, otherwise it could receive the next command a before
+            % it's finished.
+            if ~params.('IsAsync')
+                self.motor_stop(motor_port1);
+            end
         end
         
-        function macro_forward(self)
+        function macro_rotate(self, motor_port1, motor_port2, degrees, varargin)
+            defaults = struct('IsAsync', 1);
+            params = optional_args(defaults, varargin);
+            self.motor_rotate(motor_port1, degrees);
+            self.motor_rotate(motor_port2, degrees, 'IsAsync', params.('IsAsync'));
+            if ~params.('IsAsync')
+                self.motor_stop(motor_port1);
+            end
         end
         
-        function macro_backward(self)
+        function macro_forward(self, motor_port1, motor_port2)
+            self.motor_forward(motor_port1);
+            self.motor_forward(motor_port2);
         end
-
+        
+        function macro_backward(self, motor_port1, motor_port2)
+            self.motor_backward(motor_port1);
+            self.motor_backward(motor_port2);
+        end
+        
+        function macro_stop(self, motor_port1, motor_port2)
+            self.motor_stop(motor_port1);
+            self.motor_stop(motor_port2);
+        end
+        
         % Sensors %%%%%%%
         %%%%%%%%%%%%%%%%%
         function sensor_init(self, which, sensor_type)
