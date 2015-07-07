@@ -227,6 +227,28 @@ classdef ev3control < handle
             fclose(self.client);
         end
 
+        function colorid = color_id_to_str(~, id)
+            switch id
+                case 0
+                    colorid = 'NONE';
+                case 1
+                    colorid = 'BLACK';
+                case 2
+                    colorid = 'BLUE';
+                case 3
+                    colorid = 'GREEN';
+                case 4
+                    colorid = 'YELLOW';
+                case 5
+                    colorid = 'RED';
+                case 6
+                    colorid = 'WHITE';
+                case 7
+                    colorid = 'BROWN';
+                otherwise
+                    colorid = 'UNKNOWN';
+            end
+        end
         % Camera %%%%%%%%
         %%%%%%%%%%%%%%%%%
         function self = camera_init(self, varargin)
