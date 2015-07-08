@@ -1,4 +1,4 @@
-###### matlab-puppeteer
+# matlab-puppeteer
 
 This is a client program for <link>. Using matlab-puppeteer one can write
 programs for Lego EV3 robot, running leJOS and <name>. Programs are
@@ -17,7 +17,7 @@ have to use matlab-puppeteer to command <name>.
 
 ### Documentation
 
-## Initialization
+#### Initialization
 You need to know the port number and IP address of the EV3 brick. Port
 number in <name> is hardcoded as 6789. You can find IP address of the brick
 on the brick once it has been connected to PC (usually 10.0.1.1).
@@ -29,37 +29,40 @@ Then to initialize:
 All the commands to the robot will be sent through ctrl controller object,
 e. g. ```ctrl.motor_init(motor_port1, 'large');```
 
-## Functions
+#### Functions
 
-# General
+###### General
 ===========
 beep - brick makes a beep sound.
 Example:
 ```ctrl.beep()```
+
 ===========
 buzz - brick makes a buzz sound.
 Example:
 ```ctrl.buzz()```
+
 ===========
 exit - exits the main <name> program
 Example:
 ```ctrl.exit()```
+
 ===========
-# Motor
+###### Motor
 ===========
 
 
 
-# Sensor
+###### Sensor
 
-# Camera
+###### Camera
 
 
-## Dependencies and building
+#### Dependencies and building
 This program depends on JSONlab (however, you only need to do something
 about it if you are building the toolbox from source)
 
-## Notes
+#### Notes
 - When color sensor is in "colorid" mode getvalue returns id 0-7. Use
 controller's function "color_id_to_str" to get the name of the color.
 - Blocking (synchronous) commands will wait no longer than 120 seconds
