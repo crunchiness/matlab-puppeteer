@@ -32,20 +32,24 @@ e. g. ```ctrl.motor_init(motor_port1, 'large');```
 #### Functions
 
 ###### General
-===========
+
 beep - brick makes a beep sound.
 Example:
-```ctrl.beep()```
-
+```
+ctrl.beep()
+```
 ===========
 buzz - brick makes a buzz sound.
 Example:
-```ctrl.buzz()```
-
+```
+ctrl.buzz()
+```
 ===========
 exit - exits the main <name> program
 Example:
-```ctrl.exit()```
+```
+ctrl.exit()
+```
 
 ===========
 ###### Motor
