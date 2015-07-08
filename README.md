@@ -50,12 +50,131 @@ Example:
 ```
 ctrl.exit()
 ```
-
 ===========
 ###### Motor
+
+motor_init - intializes motor. This command has to be executed before any other motor command.
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+2. type (possible values 'medium', 'large')
+
+Example
+```
+ctrl.motor_init('A', 'large');
+```
 ===========
+motor_close - closes motor. When motor is closed, you can no longer send any commands to it; can initialize again (perhaps unplug one and plug in different), and it doesn't consume power. There is no need to close devices before exit command.
 
+Params:
 
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+
+Example:
+```
+ctrl.motor_close('B');
+```
+===========
+motor_forward - motor starts spinning forwards, stops only when stop command is received. Asynchronous.
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+
+Example:
+```
+ctrl.motor_forward('D');
+```
+===========
+motor_backward - motor starts spinning backwards, stops only when stop command is received. Asynchronous.
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+
+Example:
+```
+ctrl.motor_backward('B');
+```
+===========
+motor_stop - stops the motor (works on motor_forward, motor_backward, and asynchronous motor_rotate)
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+
+Example:
+```
+ctrl.motor_stop('A');
+```
+===========
+motor_gettacho - retrieves a reading from motor's tachometer (how many degrees it has turn).
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+
+Returns:
+reading - integer reading in degrees, how many degrees has the motor spinned.
+
+Example:
+```
+tacho_reading = ctrl.motor_gettacho('A');
+```
+===========
+motor_resettacho - resets motor's tachometer to zero.
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+
+Example:
+```
+ctrl.motor_resettacho('A');
+```
+===========
+motor_getspeed - get the speed of the motor, in degrees per ?. Default 360.
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+
+Returns:
+speed - integer speed degrees per ?.
+
+Example:
+```
+speed = ctrl.motor_getspeed('A');
+```
+===========
+motor_setspeed - set the speed of the motor, in degrees per ?.
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+2. speed (integer)
+
+Example:
+```
+ctrl.motor_setspeed('A', 180);
+```
+===========
+motor_rotate - rotate a specified number of degrees.
+
+Params:
+
+1. motor_port (possible values 'A', 'B', 'C', 'D')
+2. degrees (integer)
+
+Optional:
+- IsAsync (possible values: 0 (synchronous), 1 (asynchronous); default: 1)
+
+Example:
+```
+ctrl.motor_rotate('A', 720, 'IsAsync', 0); % rotate motor A by 720 degrees, blocking
+```
+===========
 
 ###### Sensor
 
@@ -66,6 +185,8 @@ ctrl.exit()
 This program depends on JSONlab (however, you only need to do something
 about it if you are building the toolbox from source)
 
+#### Synchronous (blocking) vs asynchronous commands
+
 #### Notes
 - When color sensor is in "colorid" mode getvalue returns id 0-7. Use
 controller's function "color_id_to_str" to get the name of the color.
@@ -73,3 +194,4 @@ controller's function "color_id_to_str" to get the name of the color.
 (for example, if your robot drives forward in blocking rotate mode, after
 120 seconds, the next command will be sent even if it still hasn't rotated
 the specified number of degrees).
+- Initialization commands take a few seconds, you probably want to initialize all devices at the start of the program.
