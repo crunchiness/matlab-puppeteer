@@ -377,10 +377,16 @@ This program depends on JSONlab (however, you only need to do something
 about it if you are building the toolbox from source)
 
 ## Synchronous (blocking) vs asynchronous commands
+It is important to understand the difference between synchronous and asynchronous commands.
+When Matlab executes asynchronous command, it immediately jumps to another. Whereas if command is synchronous, it waits until it's finished.
+For example if you have code:
+```
+ctrl.motor_rotate('A', 720, 'IsAsync', 1); % asynchronous
+ctrl.motor_backward('A');
+```
+the result will be that motor starts spinning backwards almost immediately, ignoring the first command (so to get the desired behaviour, you either need to add pause between them, or make the first command synchronous).
 
 ## Notes
-+ When color sensor is in "colorid" mode getvalue returns id 0-7. Use
-controller's function "color_id_to_str" to get the name of the color.
 + Blocking (synchronous) commands will wait no longer than 120 seconds
 (for example, if your robot drives forward in blocking rotate mode, after
 120 seconds, the next command will be sent even if it still hasn't rotated
