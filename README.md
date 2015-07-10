@@ -265,6 +265,35 @@ id_str = ctrl.color_id_to_str(2);
 
 #### Camera
 
+###### camera_init - intializes camera. This command has to be executed before any other camera command.
+
+Optional:
+- Width (width of resolution, default: 176)
+- Height (height of resolution, default: 144)
+
+Examples:
+```
+ctrl.camera_init();
+ctrl.camera_init('Width', 160, 'Height', 120);
+```
+===============
+###### camera_close - closes camera. When camera is closed, you can no longer send any commands to it; can initialize again. There is no need to close devices before exit command.
+
+Example:
+```
+ctrl.camera_close();
+```
+===============
+###### camera_takepic - take a picture and returns it as MATLAB array.
+
+Optional:
+- Normalize (normalize values from range 0-255 to 0.0-1.0, so that Matlab can display the image; possible values: 0 (don't normalize), 1 (normalize); default: 0)
+
+Examples:
+```
+ctrl.camera_takepic(); 
+ctrl.camera_takepic('Normalize', 1);
+```
 
 ## Dependencies and building
 This program depends on JSONlab (however, you only need to do something
