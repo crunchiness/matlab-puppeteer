@@ -234,6 +234,7 @@ Example:
 ctrl.sensor_setmode('S3', 'red');
 ```
 Note: color of LED light will change only upon sensor_getvalue command.
+
 ===============
 ###### sensor_getmode - retrieves sensor's mode.
 
