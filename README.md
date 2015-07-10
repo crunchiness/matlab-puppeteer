@@ -179,6 +179,90 @@ ctrl.motor_rotate('A', 720, 'IsAsync', 0); % rotate motor A by 720 degrees, bloc
 
 #### Sensor
 
+###### sensor_init - intializes sensor. This command has to be executed before any other sensor command.
+
+Params:
+
+1. sensor_port (possible values 'S1', 'S2', 'S3', 'S4')
+2. sensor_type (possible values 'color', 'ir', 'touch')
+
+Example:
+```
+ctrl.sensor_init('S1', 'color');
+```
+===============
+###### sensor_close - closes sensor. When sensor is closed, you can no longer send any commands to it; can initialize again (perhaps unplug one and plug in different), and it doesn't consume power. There is no need to close devices before exit command.
+
+Params:
+
+1. sensor_port (possible values 'S1', 'S2', 'S3', 'S4')
+
+Example:
+```
+ctrl.sensor_close('S1');
+```
+===============
+###### sensor_getvalue - get a reading from the sensor (same for any type of sensor)
+
+Params:
+
+1. sensor_port (possible values 'S1', 'S2', 'S3', 'S4')
+
+Returns:
+value - array of value (most often 1 value, RGB sensor returns array of 3 values).
+
+Example:
+```
+value = ctrl.sensor_getvalue('S2');
+```
+===============
+###### sensor_setmode - sets sensor's mode. Some sensors have multiple modes, e. g. color sensor has RGB, red light, and ambient light, and color id modes.
+
+Defaults:
+
+1. RGB mode for color sensor
+2. Distance mode for IR sensor
+3. Touch mode for touch sensor
+
+Params:
+
+1. sensor_port (possible values 'S1', 'S2', 'S3', 'S4')
+2. sensor_mode (possible values: for color sensor: 'rgb', 'red', 'ambient', 'colorid'; for IR sensor: 'distance'; for touch sensor: 'touch')
+
+Example:
+```
+ctrl.sensor_setmode('S3', 'red');
+```
+Note: color of LED light will change only upon sensor_getvalue command.
+===============
+###### sensor_getmode - retrieves sensor's mode.
+
+Params:
+
+1. sensor_port (possible values 'S1', 'S2', 'S3', 'S4')
+
+Returns:
+mode - string, possible values: 'rgb', 'red', 'ambient', 'colorid', 'distance', 'touch'.
+
+Example:
+```
+mode = ctrl.sensor_getmode('S3');
+```
+===============
+###### color_id_to_str - converts color id (retrieved from color sensor in color id mode as an integer value) to string.
+
+Params:
+
+1. color_id (integer 0-7)
+
+Returns:
+id_str - string, possible values: 'NONE', 'BLACK', 'BLUE', 'GREEN', 'YELLOW', 'RED', 'WHITE', 'BROWN', 'UNKNOWN'.
+
+Exampe:
+```
+id_str = ctrl.color_id_to_str(2);
+```
+
 #### Camera
 
 
