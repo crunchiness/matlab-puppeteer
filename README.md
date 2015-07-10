@@ -386,10 +386,14 @@ ctrl.motor_backward('A');
 ```
 the result will be that motor starts spinning backwards almost immediately, ignoring the first command (so to get the desired behaviour, you either need to add pause between them, or make the first command synchronous).
 
+Most of the commands listed in this documentation are asynchronous. Synchronous are only those that return some value, for instance, sensor_getvalue, and those where you can explicitly set the parameter.
+
 ## Notes
 + Blocking (synchronous) commands will wait no longer than 120 seconds
 (for example, if your robot drives forward in blocking rotate mode, after
 120 seconds, the next command will be sent even if it still hasn't rotated
 the specified number of degrees).
 + Initialization commands take a few seconds, you probably want to initialize all devices at the start of the program.
++ Brick can handle only one asynchronous rotate per motor at a time - before sending a new one, you should either wait for the first one to be completed or motor_stop it. Note that macro_rotate and macro_turn are implemented using motor_rotate.
+
 
