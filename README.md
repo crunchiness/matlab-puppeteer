@@ -292,8 +292,84 @@ Optional:
 
 Examples:
 ```
-ctrl.camera_takepic(); 
-ctrl.camera_takepic('Normalize', 1);
+pic1 = ctrl.camera_takepic();               % values 0-255
+pic2 = ctrl.camera_takepic('Normalize', 1); % values 0.0-1.0
+imshow(pic2);                               % pic2 is displayable 
+```
+
+#### Macros
+Macros are functions that use the functions above, providing two-wheel motions. This assumes that robot is based on [Lego Mindstorms EV3 Track3r](http://www.lego.com/en-gb/mindstorms/build-a-robot/track3r) chassis.
+
+###### macro_forward - sends "forward" command to both wheels.
+
+Params:
+
+1. motor_port1 (possible values 'A', 'B', 'C', 'D')
+2. motor_port2 (possible values 'A', 'B', 'C', 'D')
+
+Example:
+```
+ctrl.macro_forward('A', 'D');
+```
+===============
+###### macro_backward - sends "backward" command to both wheels.
+
+Params:
+
+1. motor_port1 (possible values 'A', 'B', 'C', 'D')
+2. motor_port2 (possible values 'A', 'B', 'C', 'D')
+
+Example:
+```
+ctrl.macro_backward('A', 'D');
+```
+===============
+###### macro_stop - sends "stop" command to both wheels. Can be used to stop all asynchronous motor movement commands.
+
+Params:
+
+1. motor_port1 (possible values 'A', 'B', 'C', 'D')
+2. motor_port2 (possible values 'A', 'B', 'C', 'D')
+
+Example:
+```
+ctrl.macro_stop('A', 'D');
+```
+===============
+###### macro_rotate - sends "rotate" command to both wheels (both wheels rotate by the same angle).
+
+Params:
+
+1. motor_port1 (possible values 'A', 'B', 'C', 'D')
+2. motor_port2 (possible values 'A', 'B', 'C', 'D')
+3. degrees (angle in degrees that each wheel should turn by)
+
+Optional:
+- IsAsync (possible values: 0 (synchronous), 1 (asynchronous); default: 1)
+
+Example:
+```
+ctrl.macro_rotate('A', 'D', 720, 'IsAsync', 0); % rotate both wheels by 720 degrees, blocking
+```
+===============
+###### macro_turn - rotate vehicle by some angle in degrees, in place.
+
+Params:
+
+1. motor_port1 (possible values 'A', 'B', 'C', 'D')
+2. motor_port2 (possible values 'A', 'B', 'C', 'D')
+3. degrees (angle in degrees that each wheel should turn by)
+
+
+Optional:
+- WheelDistance (distance between wheels in cm, default: 20.5)
+- WheelRadius (wheel radius in cm, default: 1.75)
+- IsAsync (possible values: 0 (synchronous), 1 (asynchronous); default: 1)
+
+Examples:
+```
+ctrl.macro_turn('A', 'D', 360); % spin around, asynchronous
+ctrl.macro_turn('A', 'D', 360, 'IsAsync', 0, 'WheelDistance', 20, 'WheelRadius', 2.1); % spin around, blocking
 ```
 
 ## Dependencies and building
