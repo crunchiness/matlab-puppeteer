@@ -1,9 +1,11 @@
+% Should drive around in trajectory of the "8" shape.
+% Uses two large motors.
+% Tests motor_setspeed, motor_getspeed, motor_rotate, macro_rotate.
+
 port = 6789;
 ip = '10.0.1.1';
-ctrl = ev3control(port, ip);
 motor_port1 = 'A';
 motor_port2 = 'D';
-
 WD = 20.5;      % distance between wheels
 r = 17.5;       % radius of "8" loop
 WR = 1.75;      % wheel radius
@@ -14,9 +16,11 @@ degrees_outer = round((180+(2*alpha)) * (WD + r) / WR);
 degrees_inner = round((180+(2*alpha)) * (r / WR));
 
 % Calculate straight distance to where the next loop starts
+% 0 if alpha = 90
 straight_dist = round((cot(degtorad(alpha)) * r * 360) / (pi * WR));
 
-% Initialize motors
+% Initialize controller and the motors
+ctrl = ev3control(port, ip);
 ctrl.motor_init(motor_port1, 'large');
 ctrl.motor_init(motor_port2, 'large');
 
