@@ -26,6 +26,6 @@ while d > 20
 end
 
 % Turn back from the obstacle
-ctrl.macro_turn(motor_port1, motor_port2, 180);
+ctrl.macro_turn(motor_port1, motor_port2, 180, 'IsAsync', 0);
 
 ctrl.exit()
