@@ -228,23 +228,39 @@ classdef ev3control < handle
         end
 
         function colorid = color_id_to_str(~, id)
+            %[BLACK, BLUE, BROWN, CYAN, DARK_GRAY, GRAY, GREEN, LIGHT_GRAY,MAGENTA, NONE, ORANGE, PINK, RED, WHITE, YELLOW]
+            %[7,     2,    13,    12,   11         9,    1,     10,         4,      -1,   5,      8,    0,   6,     3]
             switch id
-                case 0
-                    colorid = 'NONE';
-                case 1
+                case 7
                     colorid = 'BLACK';
                 case 2
                     colorid = 'BLUE';
-                case 3
+                case 13
+                    colorid = 'BROWN';
+                case 12
+                    colorid = 'CYAN';
+                case 11
+                    colorid = 'DARK_GRAY';
+                case 9
+                    colorid = 'GRAY';
+                case 1
                     colorid = 'GREEN';
+                case 10
+                    colorid = 'LIGHT_GRAY';
                 case 4
-                    colorid = 'YELLOW';
+                    colorid = 'MAGENTA';
+                case -1
+                    colorid = 'NONE';
                 case 5
+                    colorid = 'ORANGE';
+                case 8
+                    colorid = 'PINK';
+                case 0
                     colorid = 'RED';
                 case 6
                     colorid = 'WHITE';
-                case 7
-                    colorid = 'BROWN';
+                case 3
+                    colorid = 'YELLOW';
                 otherwise
                     colorid = 'UNKNOWN';
             end

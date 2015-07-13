@@ -254,10 +254,10 @@ mode = ctrl.sensor_getmode('S3');
 
 Params:
 
-1. color_id (integer 0-7)
+1. color_id (integer)
 
 Returns:
-id_str - string, possible values: 'NONE', 'BLACK', 'BLUE', 'GREEN', 'YELLOW', 'RED', 'WHITE', 'BROWN', 'UNKNOWN'.
+id_str - string, possible values: 'NONE', 'UNKNOWN', 'BLACK', 'BLUE', 'BROWN', 'CYAN', 'DARK_GRAY', 'GRAY', 'GREEN', 'LIGHT_GRAY', 'MAGENTA', 'ORANGE', 'PINK', 'RED', 'WHITE', 'YELLOW'. 'NONE' is returned when sensor can't detect color, 'UNKNOWN' when function gets bad input.
 
 Exampe:
 ```
